@@ -12,6 +12,7 @@ DJANGO_WSGI_MODULE=BoWebsite.wsgi                 # WSGI module name
 echo "Starting $NAME as `whoami`"
 
 # Activate the virtual environment
+source /home/ubuntu/code/BoWebsite/venv/bin/activate
 cd $DJANGODIR
 export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 export PYTHONPATH=$DJANGODIR:$PYTHONPATH
