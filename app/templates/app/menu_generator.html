@@ -1,17 +1,32 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-  <h1>Menu Generator</h1>
+  <h1>菜单生成器</h1>
   <form id="menuForm">
-    <label for="ingredients">Ingredients:</label>
+    <label for="ingredients">食材：</label>
     <textarea id="ingredients" name="ingredients" rows="4" cols="50"></textarea><br><br>
-    <label for="month">Month:</label>
+    <label for="month">月份：</label>
     <select id="month" name="month">
-      <option value="1">January</option>
-      <option value="2">February</option>
-      <!-- Add other months -->
+      <option value="1">一月</option>
+      <option value="2">二月</option>
+      <!-- 添加其他月份 -->
     </select><br><br>
-    <button type="submit">Generate Menu</button>
+    <label for="breakfastCount">早餐食材数量：</label>
+    <select id="breakfastCount" name="breakfastCount">
+      <option value="3" selected>3</option>
+      <!-- 添加其他数量选项 -->
+    </select><br><br>
+    <label for="lunchCount">午餐食材数量：</label>
+    <select id="lunchCount" name="lunchCount">
+      <option value="3" selected>3</option>
+      <!-- 添加其他数量选项 -->
+    </select><br><br>
+    <label for="dinnerCount">晚餐食材数量：</label>
+    <select id="dinnerCount" name="dinnerCount">
+      <option value="3" selected>3</option>
+      <!-- 添加其他数量选项 -->
+    </select><br><br>
+    <button type="submit">生成菜单</button>
   </form>
 
   <div id="menuOutput"></div>
@@ -21,24 +36,27 @@
     document.getElementById("menuForm").addEventListener("submit", function(event){
       event.preventDefault();
 
-      // Get form data
+      // 获取表单数据
       const ingredients = document.getElementById("ingredients").value.split('\n');
       const month = document.getElementById("month").value;
+      const breakfastCount = document.getElementById("breakfastCount").value;
+      const lunchCount = document.getElementById("lunchCount").value;
+      const dinnerCount = document.getElementById("dinnerCount").value;
 
-      // Send data to the backend
-      fetch('/app/generate_menu/', {
+      // 将数据发送到后端
+      fetch('/generate_menu/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': '{{ csrf_token }}'
         },
-        body: JSON.stringify({ingredients: ingredients, month: month})
+        body: JSON.stringify({ingredients: ingredients, month: month, breakfastCount: breakfastCount, lunchCount: lunchCount, dinnerCount: dinnerCount})
       })
       .then(response => response.json())
       .then(data => {
-        // Display menu and download link
+        // 显示菜单和下载链接
         document.getElementById("menuOutput").innerHTML = data.menu;
-        document.getElementById("downloadLink").innerHTML = `<a href="/app/download_menu/${data.filename}/">Download Excel</a>`;
+        document.getElementById("downloadLink").innerHTML = `<a href="/download_menu/${data.filename}/">下载 Excel</a>`;
       });
     });
   </script>
