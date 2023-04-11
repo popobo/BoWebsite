@@ -1,63 +1,95 @@
-{% extends 'app/base.html' %}
-
+{% extends "app/base.html" %}
 {% block content %}
-  <h1>菜单生成器</h1>
-  <form id="menuForm">
-    <label for="ingredients">食材：</label>
-    <textarea id="ingredients" name="ingredients" rows="4" cols="50"></textarea><br><br>
-    <label for="month">月份：</label>
-    <select id="month" name="month">
-      <option value="1">一月</option>
-      <option value="2">二月</option>
-      <!-- 添加其他月份 -->
-    </select><br><br>
-    <label for="breakfastCount">早餐食材数量：</label>
-    <select id="breakfastCount" name="breakfastCount">
-      <option value="3" selected>3</option>
-      <!-- 添加其他数量选项 -->
-    </select><br><br>
-    <label for="lunchCount">午餐食材数量：</label>
-    <select id="lunchCount" name="lunchCount">
-      <option value="3" selected>3</option>
-      <!-- 添加其他数量选项 -->
-    </select><br><br>
-    <label for="dinnerCount">晚餐食材数量：</label>
-    <select id="dinnerCount" name="dinnerCount">
-      <option value="3" selected>3</option>
-      <!-- 添加其他数量选项 -->
-    </select><br><br>
-    <button type="submit">生成菜单</button>
-  </form>
-
-  <div id="menuOutput"></div>
-  <div id="downloadLink"></div>
-
-  <script>
-    document.getElementById("menuForm").addEventListener("submit", function(event){
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center my-4">菜单生成器</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <form id="menuForm">
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">食材：</label>
+                        <textarea id="ingredients" name="ingredients" rows="4" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="month" class="form-label">月份：</label>
+                        <select id="month" name="month" class="form-select">
+                            <option value="1">一月</option>
+                            <option value="2">二月</option>
+                            <!-- 添加其他月份 -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="breakfastCount" class="form-label">早餐食材数量：</label>
+                        <select id="breakfastCount" name="breakfastCount" class="form-select">
+                            <option value="3" selected>3</option>
+                            <!-- 添加其他数量选项 -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lunchCount" class="form-label">午餐食材数量：</label>
+                        <select id="lunchCount" name="lunchCount" class="form-select">
+                            <option value="3" selected>3</option>
+                            <!-- 添加其他数量选项 -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dinnerCount" class="form-label">晚餐食材数量：</label>
+                        <select id="dinnerCount" name="dinnerCount" class="form-select">
+                            <option value="3" selected>3</option>
+                            <!-- 添加其他数量选项 -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary">生成菜单</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center my-4">生成的菜单</h2> <div class="col-12" id="downloadLink"></div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12" id="menuOutput"></div>
+        </div>
+        
+    </div>
+    <script>
+    document.getElementById("menuForm").addEventListener("submit", function (event) {
       event.preventDefault();
-
+  
       // 获取表单数据
-      const ingredients = document.getElementById("ingredients").value.split('\n');
-      const month = document.getElementById("month").value;
-      const breakfastCount = document.getElementById("breakfastCount").value;
-      const lunchCount = document.getElementById("lunchCount").value;
-      const dinnerCount = document.getElementById("dinnerCount").value;
+  const ingredients = document.getElementById("ingredients").value.split('\n');
+  const month = document.getElementById("month").value;
+  const breakfastCount = document.getElementById("breakfastCount").value;
+  const lunchCount = document.getElementById("lunchCount").value;
+  const dinnerCount = document.getElementById("dinnerCount").value;
 
-      // 将数据发送到后端
-      fetch('/generate_menu/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: JSON.stringify({ingredients: ingredients, month: month, breakfastCount: breakfastCount, lunchCount: lunchCount, dinnerCount: dinnerCount})
-      })
-      .then(response => response.json())
-      .then(data => {
-        // 显示菜单和下载链接
-        document.getElementById("menuOutput").innerHTML = data.menu;
-        document.getElementById("downloadLink").innerHTML = `<a href="/download_menu/${data.filename}/">下载 Excel</a>`;
-      });
+  // 将数据发送到后端
+  fetch('/generate_menu/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify({ ingredients: ingredients, month: month, breakfastCount: breakfastCount, lunchCount: lunchCount, dinnerCount: dinnerCount })
+  })
+    .then(response => response.json())
+    .then(data => {
+      // 显示菜单和下载链接
+      document.getElementById("menuOutput").innerHTML = data.menu;
+      document.getElementById("downloadLink").innerHTML = `<a href="/download_menu/${data.filename}/" class="btn btn-success mt-3">下载 Excel</a>`;
     });
-  </script>
-{% endblock %}
+});
+    </script>
+{% endblock content %}
