@@ -15,12 +15,6 @@ from calendar import monthrange
 def home(request):
     return render(request, 'home.html')
 
-def page1(request):
-    return render(request, 'page1.html')
-
-def page2(request):
-    return render(request, 'page2.html')
-
 @csrf_exempt
 def generate_menu(request):
     if request.method == 'POST':
